@@ -76,8 +76,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        readfromIntent(getIntent());
-        pendingIntent = PendingIntent.getActivity(this, 0,new Intent(this,getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        try {
+            readfromIntent(getIntent());
+            pendingIntent = PendingIntent.getActivity(this, 0,new Intent(getBaseContext(),getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
         writingTagFilters = new IntentFilter[] { tagDetected };
@@ -162,26 +167,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        WriteModeOff();
+        //disable write
+        writeMode = false;
+        nfcAdapter.disableForegroundDispatch(this);
     }
-
-
 
     @Override
     protected void onResume() {
         super.onResume();
-        WriteModeOn();
-    }
-
-    //Enable Write
-    private void WriteModeOn() {
+        //enable write
         writeMode = true;
-        nfcAdapter.enableForegroundDispatch(this, pendingIntent, writingTagFilters, null);
-    }
-
-    //Disable write
-    private void WriteModeOff() {
-        writeMode = false;
-        nfcAdapter.disableForegroundDispatch(this);
+       // nfcAdapter.enableForegroundDispatch(this, pendingIntent, writingTagFilters, null);
     }
 }
