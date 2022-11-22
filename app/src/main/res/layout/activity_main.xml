@@ -25,6 +25,7 @@
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_marginTop="30dp"
+            android:maxLength="10"
             android:hint="enter text to write"/>
         <Button
             android:id="@+id/writeBtn"
